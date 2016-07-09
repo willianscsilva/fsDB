@@ -16,11 +16,65 @@ void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, n
         printf ("Listener received (size: %d, ctx refs: %d): (first %d bytes, fragment: %d) '%s'\n",
                 nopoll_msg_get_payload_size (msg),
                 nopoll_ctx_ref_count (ctx), shown, nopoll_msg_is_fragment (msg), content_msg);
-
+        wsJson = content_msg;
+        jsonParse();
         // reply to the message
         nopoll_conn_send_text (conn, "Successfully received message", 30);
-
         return;
+}
+
+void jsonParse()
+{
+    char *out;cJSON *json;
+    json=cJSON_Parse(wsJson);
+    if (!json) {printf("Error before: [%s]\n",cJSON_GetErrorPtr());}
+    else
+    {
+        out=cJSON_Print(json);
+        cJSON_Delete(json);
+        printf("%s\n",out);
+        free(out);
+    }
+}
+
+int createCollection(const char *collectionName)
+{
+    int collectionExists;
+    int collectionCreated;
+    collectionExists = checkCollectionExists(collectionName);
+    if(!collectionExists)
+    {
+        FILE * fp;
+        fp = fopen( collectionName, "w" );
+        if(fp != NULL)
+        {
+            collectionCreated = 1;
+        }
+        else
+        {
+            collectionCreated = 0;
+        }
+        fclose(fp);
+    }
+    else
+    {
+        collectionCreated = 0;
+    }
+    return collectionCreated;
+}
+
+int checkCollectionExists(const char *collectionName)
+{
+    FILE * fp;
+    fp = fopen( collectionName, "r" );
+    if(fp != NULL)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 void initWebSocketServer(char** params)
@@ -37,4 +91,5 @@ void initWebSocketServer(char** params)
     nopoll_ctx_set_on_msg (ctx, listener_on_message, NULL);
     nopoll_loop_wait (ctx, 0);
     nopoll_ctx_unref (ctx);
+
 }
