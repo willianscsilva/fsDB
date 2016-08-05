@@ -1,11 +1,12 @@
 #include "WebSocketServer.h"
+#include "JSONDataController.h"
+#include "CommandsController.h"
 #include <locale.h>
 
 void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, noPollPtr * user_data)
 {
         *setlocale(LC_ALL,"");
-        int shown;
-        int bytes;
+        int shown, bytes, resultParse;
         bytes = nopoll_msg_get_payload_size (msg);
         shown = bytes;
         char content_msg[bytes];
@@ -16,65 +17,15 @@ void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, n
         printf ("Listener received (size: %d, ctx refs: %d): (first %d bytes, fragment: %d) '%s'\n",
                 nopoll_msg_get_payload_size (msg),
                 nopoll_ctx_ref_count (ctx), shown, nopoll_msg_is_fragment (msg), content_msg);
+        // json to parse.
         wsJson = content_msg;
-        jsonParse();
+        resultParse = jsonParse();
+        if(resultParse == 1){
+            initCommandsController();
+        }
         // reply to the message
         nopoll_conn_send_text (conn, "Successfully received message", 30);
         return;
-}
-
-void jsonParse()
-{
-    char *out;cJSON *json;
-    json=cJSON_Parse(wsJson);
-    if (!json) {printf("Error before: [%s]\n",cJSON_GetErrorPtr());}
-    else
-    {
-        out=cJSON_Print(json);
-        cJSON_Delete(json);
-        printf("%s\n",out);
-        free(out);
-    }
-}
-
-int createCollection(const char *collectionName)
-{
-    int collectionExists;
-    int collectionCreated;
-    collectionExists = checkCollectionExists(collectionName);
-    if(!collectionExists)
-    {
-        FILE * fp;
-        fp = fopen( collectionName, "w" );
-        if(fp != NULL)
-        {
-            collectionCreated = 1;
-        }
-        else
-        {
-            collectionCreated = 0;
-        }
-        fclose(fp);
-    }
-    else
-    {
-        collectionCreated = 0;
-    }
-    return collectionCreated;
-}
-
-int checkCollectionExists(const char *collectionName)
-{
-    FILE * fp;
-    fp = fopen( collectionName, "r" );
-    if(fp != NULL)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 void initWebSocketServer(char** params)
