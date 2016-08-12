@@ -14,10 +14,13 @@
 
                ws.onopen = function()
                {
-                  var data1 = {'name':'willçãoéá'};
-                  var data2 = {'name':'will2'};
+                  //var data1 = {'name':'willçãoéá'};
+                  var data1 = {'command':'checkCollectionExists', 'value':'test'};
+                  //var data2 = {'command':'addDocumentInCollection', 'value':{'name':'willçãoéá'}};
+                  var data2 = {'command':'addDocumentInCollection', 'value':{'name':'willsilvamonstro'}};
+                  //var data2 = {'command':'addDocumentInCollection', 'value':'ola mundo'};
                   var data = [data1, data2];
-                  var j = JSON.stringify(data);                  
+                  var j = JSON.stringify(data);
                   console.log(j);
                   // Web Socket is connected, send data using send()
                   //ws.send(document.documentElement.innerHTML);

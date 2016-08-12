@@ -14,15 +14,12 @@ void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, n
         memset (content_msg, 0, bytes);
         memcpy (content_msg, (const char *) nopoll_msg_get_payload (msg), shown);
         // print the message (for debugging purposes) and reply
-        printf ("Listener received (size: %d, ctx refs: %d): (first %d bytes, fragment: %d) '%s'\n",
+        /*printf ("Listener received (size: %d, ctx refs: %d): (first %d bytes, fragment: %d) '%s'\n",
                 nopoll_msg_get_payload_size (msg),
-                nopoll_ctx_ref_count (ctx), shown, nopoll_msg_is_fragment (msg), content_msg);
+                nopoll_ctx_ref_count (ctx), shown, nopoll_msg_is_fragment (msg), content_msg);*/
         // json to parse.
         wsJson = content_msg;
-        resultParse = jsonParse();
-        if(resultParse == 1){
-            initCommandsController();
-        }
+        jsonParse();        
         // reply to the message
         nopoll_conn_send_text (conn, "Successfully received message", 30);
         return;

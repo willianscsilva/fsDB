@@ -8,4 +8,4 @@
 #include "cJSON.h"
 
 char *wsJson;
-int jsonParse();
+void jsonParse();
