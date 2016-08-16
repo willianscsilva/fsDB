@@ -15,9 +15,9 @@
                ws.onopen = function()
                {
                   //var data1 = {'name':'willçãoéá'};
-                  var data1 = {'command':'checkCollectionExists', 'value':'test'};
-                  //var data2 = {'command':'addDocumentInCollection', 'value':{'name':'willçãoéá'}};
-                  var data2 = {'command':'addDocumentInCollection', 'value':{'name':'willsilvamonstro'}};
+                  var data1 = {'command':'createCollection', 'value':'test'};
+                  var data2 = {'command':'addDocumentInCollection', 'name':'test', 'value':{'name':'willçãoéá', 'age':33, 'sex': 'male', 'cellphone':'5511946090982', 'adddress':'avenida palmira, 622', 'city':'ribeirão pires', 'state':'são paulo'}};
+                  //var data2 = {'command':'addDocumentInCollection', 'value':{'name':'willsilvamonstro'}};
                   //var data2 = {'command':'addDocumentInCollection', 'value':'ola mundo'};
                   var data = [data1, data2];
                   var j = JSON.stringify(data);

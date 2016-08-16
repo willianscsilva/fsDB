@@ -4,11 +4,17 @@ int createCollection(const char *collectionName)
 {
     int collectionExists;
     int collectionCreated;
-    collectionExists = checkCollectionExists(collectionName);
+    char dir[50];
+    memset(dir, '\0', sizeof(dir));
+    strcpy(dir, "collections/");
+    strcat(dir, collectionName);
+
+    collectionExists = checkCollectionExists(dir);
     if(!collectionExists)
     {
+
         FILE * fp;
-        fp = fopen( collectionName, "w" );
+        fp = fopen( dir, "w" );
         if(fp != NULL)
         {
             collectionCreated = 1;
@@ -28,18 +34,37 @@ int createCollection(const char *collectionName)
 
 int checkCollectionExists(const char *collectionName)
 {
+    int exists=0;
     FILE * fp;
     fp = fopen( collectionName, "r" );
     if(fp != NULL)
     {
+        exists = 1;
+    }
+    fclose(fp);
+    return exists;
+}
+
+int addDocumentInCollection(char* name, const char *documentValue)
+{
+
+    int cmp = strcmp(name, "");
+    if(cmp!=0)
+    {
+        char dir[50];
+        memset(dir, '\0', sizeof(dir));
+        strcpy(dir, "collections/");
+        strcat(dir, name);
+        strcat((char *)documentValue, "\n");
+        FILE * fp;
+        fp = fopen( dir, "a+" );
+        fwrite(documentValue , 1 , strlen(documentValue) , fp );
+        fclose(fp);
         return 1;
     }
     else
     {
-        return 0;
+        printf("Collection name can be not empty!\n");
     }
-}
-
-int addDocumentInCollection(const char *collectionName){
 
 }

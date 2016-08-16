@@ -6,10 +6,10 @@
  */
 #include "../Default.h"
 
-int createCollection(const char *collectionName);
-
-int addDocumentInCollection(const char *collectionName);
-
 int checkCollectionExists(const char *collectionName);
 
+int createCollection(const char *collectionName);
+
 int checkDocumentExists(const char *collectionName);
+
+int addDocumentInCollection(char* name, const char *documentValue);
