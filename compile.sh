@@ -9,8 +9,11 @@ gcc \
      Core/JSONDataController.c \
      Core/CollectionController.c \
      Core/CommandsController.c \
+     Core/Str2Md5.c \
      -I/usr/local/include/nopoll \
      -L/usr/local/lib -lnopoll \
+     -I/usr/include/openssl/ \
      -o fsDB \
      -lwebsockets \
+     -lcrypto \
      -lm

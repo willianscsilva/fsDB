@@ -59,14 +59,14 @@ int execInternalCommand(int commandCode, char* name, char *value)
     switch(commandCode)
     {
         case CREATE_COLLECTION:
-           printf("CREATE_COLLECTION - Command Code: %d and Value: %s\n", commandCode, value);
+           //printf("CREATE_COLLECTION - Command Code: %d and Value: %s\n", commandCode, value);
            collectionCreated = createCollection(value);
-           (collectionCreated) ? printf("Collection created with successfully!\n") : printf("The collection can not be created!\n");
+           (collectionCreated) ? printf("Collection created with successfully!\n") : printf("The collection already exists!\n");
            return 1;
         break;
         case ADD_DOCUMENT_IN_COLLECTION:
            //call fuction here
-           printf("ADD_DOCUMENT_IN_COLLECTION - Command Code: %d and Value: %s\n", commandCode, value);
+           //printf("ADD_DOCUMENT_IN_COLLECTION - Command Code: %d and Value: %s\n", commandCode, value);
            addDocumentInCollection(name, value);
            return 1;
         break;
