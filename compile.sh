@@ -1,5 +1,6 @@
 #!/bin/bash
 rm -f fsDB
+mkdir -p collections
 gcc \
      Main.c \
      Core/Core.c \
