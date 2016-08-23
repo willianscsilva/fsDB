@@ -16,10 +16,55 @@
                {
                   //var data1 = {'name':'willçãoéá'};
                   var data1 = {'command':'createCollection', 'value':'test'};
-                  //var data2 = {'command':'addDocumentInCollection', 'name':'test', 'value':{'name':'willçãoéá', 'age':33, 'sex': 'male', 'cellphone':'5511946090982', 'adddress':'avenida palmira, 622', 'city':'ribeirão pires', 'state':'são paulo'}};
-                  var data2 = {'command':'addDocumentInCollection', 'name':'test', 'value':{'name':'willsilvamonstro'}};
-                  //var data2 = {'command':'addDocumentInCollection', 'value':'ola mundo'};
+                  //var data2 = {'command':'addDocument', 'collection':'test', 'value':{'name':'willçãoéá', 'age':33, 'sex': 'male', 'cellphone':'5511946090982', 'adddress':'avenida palmira, 622', 'city':'ribeirão pires', 'state':'são paulo'}};
+                  //var data2 = {'command':'addDocument', 'collection':'test', 'value':{'name':'willsilvamonstro'}};
+                  var data2 = {'command':'addDocument', 'collection':'test', 'value':'ola mundo'};
                   var data = [data1, data2];
+                  var j = JSON.stringify(data);
+                  console.log(j);
+                  // Web Socket is connected, send data using send()
+                  //ws.send(document.documentElement.innerHTML);
+                  ws.send(j);
+                  alert("Message is sent...");
+               };
+
+               ws.onmessage = function (evt)
+               {
+                  var received_msg = evt.data;
+                  alert("Message is received..." + received_msg);
+               };
+
+               ws.onclose = function()
+               {
+                  // websocket is closed.
+                  alert("Connection is closed...");
+               };
+
+            }
+            else
+
+            {
+               // The browser doesn't support WebSocket
+               alert("WebSocket NOT supported by your Browser!");
+            }
+         }
+
+         function WebSocketTest2()
+         {
+            if ("WebSocket" in window)
+            {
+               alert("WebSocket is supported by your Browser!");
+               // Let us open a web socket
+               var ws = new WebSocket("ws://localhost:5556/echo");
+
+               ws.onopen = function()
+               {
+                  //var data1 = {'name':'willçãoéá'};
+                  //var data1 = {'command':'createCollection', 'value':'test'};
+                  var data2 = {'command':'addDocumentInCollection', 'name':'test', 'value':{'name':'willçãoéá', 'age':33, 'sex': 'male', 'cellphone':'5511946090982', 'adddress':'avenida palmira, 622', 'city':'ribeirão pires', 'state':'são paulo'}};
+                  //var data1 = {'command':'addDocumentInCollection', 'name':'test', 'value':{'name':'willsilvamonstro'}};
+                  //var data2 = {'command':'addDocumentInCollection', 'value':'ola mundo'};
+                  var data = [data1];
                   var j = JSON.stringify(data);
                   console.log(j);
                   // Web Socket is connected, send data using send()
@@ -55,6 +100,10 @@
    <body>
       <div id="sse">
          <a href="javascript:WebSocketTest()">Run WebSocket</a>
+      </div>
+
+      <div id="sse2">
+         <!--a href="javascript:WebSocketTest2()">Run WebSocket2</a-->
       </div>
    </body>
 

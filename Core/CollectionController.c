@@ -44,13 +44,13 @@ int checkCollectionExists(const char *collectionName)
     return exists;
 }
 
-int addDocumentInCollection(char* name, const char *documentValue)
+int addDocumentInCollection(char* collection, const char *documentValue)
 {
-    int cmp = strcmp(name, "");
+    int cmp = strcmp(collection, "");
     if(cmp!=0)
     {
         char *outMd5 = 0;
-        char *dir = pathCollection__(name);
+        char *dir = pathCollection__(collection);
 
         outMd5 = str2md5(documentValue, strlen(documentValue));
         strcat(outMd5, "\n");

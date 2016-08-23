@@ -6,6 +6,6 @@
 
 void initCommandsController();
 void parsingCommandObject(cJSON *item);
-void parsingCommand(char *commandString, char *nameString, char *valueString);
-void checkAllFields_IsSetted(cJSON * command, cJSON * value, cJSON * name, int isObjt, int pos);
-int execInternalCommand(int commandCode, char* name, char *value);
+void parsingCommand(char *commandString, char *collectionString, char *valueString, int isObjt);
+void checkAllFields_IsSetted(cJSON * command, cJSON * value, cJSON * collection, int isObjt, int pos);
+int execInternalCommand(int commandCode, char* collection, char *value, int isObjt);

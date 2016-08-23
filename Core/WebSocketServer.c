@@ -19,7 +19,7 @@ void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, n
                 nopoll_ctx_ref_count (ctx), shown, nopoll_msg_is_fragment (msg), content_msg);*/
         // json to parse.
         wsJson = content_msg;
-        jsonParse();        
+        jsonParse();
         // reply to the message
         nopoll_conn_send_text (conn, "Successfully received message", 30);
         return;

@@ -14,7 +14,7 @@ int createCollection(const char *collectionName);
 
 int checkDocumentExists(char *pathCollection, char *documentName);
 
-int addDocumentInCollection(char* name, const char *documentValue);
+int addDocumentInCollection(char* collection, const char *documentValue);
 
 int addInCollection__(char *path, char *value);
 
