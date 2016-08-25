@@ -1,6 +1,7 @@
 #include "CollectionController.h"
 #include "Str2Md5.h"
 #include "../Default.h"
+#include "cJSON.h"
 
 char *pathCollection__(const char *collectionName)
 {
@@ -44,24 +45,30 @@ int checkCollectionExists(const char *collectionName)
     return exists;
 }
 
-int addDocumentInCollection(char* collection, const char *documentValue)
+int addDocumentInCollection(char* collection, char *id, const char *documentValue)
 {
     int cmp = strcmp(collection, "");
     if(cmp!=0)
     {
-        char *outMd5 = 0;
+        char *documentValueMd5 = 0;
+        char *documentIdMd5 = 0;
+        char *documentValueObj = 0;
         char *dir = pathCollection__(collection);
 
-        outMd5 = str2md5(documentValue, strlen(documentValue));
-        strcat(outMd5, "\n");
-        int add__ =  addInCollection__(dir, outMd5);
+        documentValueMd5 = str2md5(documentValue, strlen(documentValue));
+        documentIdMd5    = str2md5(id, strlen(id));
+        documentValueObj = buildCollecionContent(documentValueMd5, documentIdMd5);
+        strcat(documentValueObj, "\n");
+
+        int add__ =  addInCollection__(dir, documentValueObj);
         if(add__ == 1)
         {
-            addInDocument__(outMd5, documentValue);
+            addInDocument__(documentValueMd5, documentValue);
         }
         else
         {
             printf("Document already exists!\n");//tracking error here.
+            return 0;
         }
         return 1;
     }
@@ -70,6 +77,16 @@ int addDocumentInCollection(char* collection, const char *documentValue)
         printf("Collection name can be not empty!\n");//tracking error here.
         return 0;
     }
+}
+
+char *buildCollecionContent(char *documentName, char *documentId)
+{
+    cJSON *root,*id;
+    root = cJSON_CreateObject();
+    cJSON_AddItemToObject(root, documentName, id = cJSON_CreateObject());
+    cJSON_AddStringToObject(id, "id", documentId);
+    char * rendered = cJSON_PrintUnformatted(root);
+    return rendered;
 }
 
 int checkDocumentExists(char *pathCollection, char *documentName)
@@ -87,6 +104,7 @@ int checkDocumentExists(char *pathCollection, char *documentName)
     }
 
     while ((read = getline(&line, &len, fp)) != -1) {
+        //improve this comparison method
         if(strcmp(line, documentName) == 0)
         {
             return 1;

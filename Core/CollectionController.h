@@ -14,8 +14,10 @@ int createCollection(const char *collectionName);
 
 int checkDocumentExists(char *pathCollection, char *documentName);
 
-int addDocumentInCollection(char* collection, const char *documentValue);
+int addDocumentInCollection(char* collection, char *id, const char *documentValue);
 
 int addInCollection__(char *path, char *value);
 
 void addInDocument__(char *documentName, const char *value);
+
+char *buildCollecionContent(char *documentName, char *documentId);
