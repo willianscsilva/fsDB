@@ -1,7 +1,7 @@
 #include "CommandsController.h"
 #include "CollectionController.h"
 
-const char *commandList[] = {"createCollection","addDocument", ""};
+const char *commandList[] = {"createCollection","addDocument", "find"};
 
 void initCommandsController(cJSON *json)
 {
@@ -78,6 +78,18 @@ int execInternalCommand(int commandCode, char* collection, char *id, char *value
                printf("the 'value' field does not contain a json object!\n");
                return 0;
            }
+        break;
+        case FIND:
+            if(isObjt == 1)
+            {
+                find(collection, id, value);                
+                return 1;
+            }
+            else
+            {
+                printf("the 'value' field does not contain a json object!\n");
+                return 0;
+            }
         break;
     }
     return 0;

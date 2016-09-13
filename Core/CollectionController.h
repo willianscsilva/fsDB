@@ -16,6 +16,16 @@ int checkDocumentExists(char *pathCollection, char *documentName);
 
 int addDocumentInCollection(char* collection, char *id, const char *documentValue);
 
+char *find(char* collection, char *id, char *query);
+
+void find_readCollection(char *documentId, char* collection);
+
+void find_documentsById(char * lineContent_collection, char *documentId);
+
+void find_readList(char *query);
+
+void find_execQueryInDocument(char *documentName, char *query);
+
 int addInCollection__(char *path, char *value);
 
 void addInDocument__(char *documentName, const char *value);

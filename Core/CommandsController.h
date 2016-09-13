@@ -3,6 +3,7 @@
 #define COUNT(x)  (int)(sizeof(x) / sizeof((x)[0]))
 #define CREATE_COLLECTION 0
 #define ADD_DOCUMENT_IN_COLLECTION 1
+#define FIND 2
 
 void initCommandsController();
 void parsingCommandObject(cJSON *item);

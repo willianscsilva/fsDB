@@ -2,7 +2,10 @@
 #include "Str2Md5.h"
 #include "../Default.h"
 #include "cJSON.h"
+#include "RegexController.h"
+#include "ArrayController.h"
 
+int foundDocuments;
 char *pathCollection__(const char *collectionName)
 {
     static char dir[50];
@@ -77,6 +80,74 @@ int addDocumentInCollection(char* collection, char *id, const char *documentValu
         printf("Collection name can be not empty!\n");//tracking error here.
         return 0;
     }
+}
+
+char *find(char* collection, char *id, char *query)
+{
+    char *documentIdMd5 = str2md5(id, strlen(id));
+    find_readCollection(documentIdMd5, collection);
+    (foundDocuments) ? find_readList(query) : NULL;
+}
+
+void find_readList(char *query)
+{
+    int i=0;    
+    while(i<indexOfStrings)
+    {
+        find_execQueryInDocument(arrayOfStrings[i], query);
+        i++;
+    }
+}
+
+void find_execQueryInDocument(char *documentName, char *query)
+{
+    printf("Open this document: %s and execute this query: %s\n", documentName, query);
+
+}
+
+void find_readCollection(char *documentId, char* collection)
+{
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    char * path = pathCollection__(collection);
+    fp = fopen(path, "r");
+    if (fp == NULL)
+    {
+        printf("Trying read, but Collection not exists!\n");//tracking error here.
+        return;
+    }
+
+    while ((read = getline(&line, &len, fp)) != -1) {
+        find_documentsById(line, documentId);
+    }
+    fclose(fp);
+    if (line)
+    {
+        free(line);
+    }
+}
+
+void find_documentsById(char *lineContent_collection, char *documentId)
+{
+    int match;
+    char *patternFormat = "{\"(.*?)\":{\"id\":\"%s\"}}";
+    int length = strlen(patternFormat) + strlen(documentId);
+    char pattern[length];
+    sprintf(pattern, patternFormat, documentId);
+    match = regexMatch(pattern, lineContent_collection);
+    if(match)
+    {
+        int exists = checkStringValueExistsArray(contentMatch);
+        //printf("exists: %i\n", exists);
+        if(exists == 0)
+        {
+            appendStringArray(contentMatch);
+            foundDocuments = 1;
+        }
+    }
+    contentMatch = NULL;
 }
 
 char *buildCollecionContent(char *documentName, char *documentId)

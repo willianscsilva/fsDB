@@ -11,10 +11,13 @@ gcc \
      Core/CollectionController.c \
      Core/CommandsController.c \
      Core/Str2Md5.c \
+     Core/RegexController.c \
+     Core/ArrayController.c \
      -I/usr/local/include/nopoll \
      -L/usr/local/lib -lnopoll \
      -I/usr/include/openssl/ \
      -o fsDB \
      -lwebsockets \
      -lcrypto \
+     -lpcre \
      -lm
