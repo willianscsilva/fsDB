@@ -13,6 +13,7 @@ gcc \
      Core/Str2Md5.c \
      Core/RegexController.c \
      Core/ArrayController.c \
+     Core/StringAuxiliary.c \
      -I/usr/local/include/nopoll \
      -L/usr/local/lib -lnopoll \
      -I/usr/include/openssl/ \

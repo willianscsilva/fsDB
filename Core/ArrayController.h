@@ -5,8 +5,10 @@
 char **arrayOfStrings;
 int indexOfStrings;
 
-void appendStringArray(char * value);
+int checkStringValueExistsArray(char *value);
+
+char **appendStringArray(char * value, int *externId);
+
+void nullingStringArray();
 
 char * getStringArrayValue(int index);
-
-int checkStringValueExistsArray(char *value);

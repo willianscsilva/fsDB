@@ -4,13 +4,25 @@
 #include "cJSON.h"
 #include "RegexController.h"
 #include "ArrayController.h"
+#include "StringAuxiliary.h"
+#include "WsReturn.h"
 
 int foundDocuments;
-char *pathCollection__(const char *collectionName)
+int indexArrayDocuments;
+char **arrayDocuments;
+char **wsArrayReturn;
+char *pathCollectionDocument__(const char *collectionName, char *documentName)
 {
     static char dir[50];
     strcpy(dir, "collections/");
-    strcat(dir, collectionName);
+    if(collectionName != NULL)
+    {
+         strcat(dir, collectionName);
+    }
+    else if(documentName != NULL)
+    {
+        strcat(dir, documentName);
+    }
     return dir;
 }
 
@@ -18,7 +30,7 @@ int createCollection(const char *collectionName)
 {
     int collectionExists;
     int collectionCreated=0;
-    char *dir = pathCollection__(collectionName);
+    char *dir = pathCollectionDocument__(collectionName, NULL);
 
     collectionExists = checkCollectionExists(dir);
     if(!collectionExists)
@@ -56,7 +68,7 @@ int addDocumentInCollection(char* collection, char *id, const char *documentValu
         char *documentValueMd5 = 0;
         char *documentIdMd5 = 0;
         char *documentValueObj = 0;
-        char *dir = pathCollection__(collection);
+        char *dir = pathCollectionDocument__(collection, NULL);
 
         documentValueMd5 = str2md5(documentValue, strlen(documentValue));
         documentIdMd5    = str2md5(id, strlen(id));
@@ -91,18 +103,122 @@ char *find(char* collection, char *id, char *query)
 
 void find_readList(char *query)
 {
-    int i=0;    
-    while(i<indexOfStrings)
+    int i=0;
+    while(i<=indexArrayDocuments)
     {
-        find_execQueryInDocument(arrayOfStrings[i], query);
+        find_execQueryInDocument(arrayDocuments[i], query);
         i++;
     }
+
+    wsArrayReturn = arrayDocuments;
+    arrayDocuments = NULL;
+    nullingStringArray();
 }
 
 void find_execQueryInDocument(char *documentName, char *query)
 {
-    printf("Open this document: %s and execute this query: %s\n", documentName, query);
+    printf("Open this document: %s\n", documentName);
 
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    char *path = pathCollectionDocument__(NULL, documentName);
+    fp = fopen(path, "r");
+    if (fp == NULL)
+    {
+        printf("Trying read, but Document not exists!\n");//tracking error here.
+        return;
+    }
+
+    while ((read = getline(&line, &len, fp)) != -1)
+    {
+        find_execQuery(line, query);
+    }
+    fclose(fp);
+    if (line)
+    {
+        free(line);
+    }
+}
+
+void find_execQuery(char * line, char *query)
+{
+    printf("Document content: %s - execute this query: %s\n", line, query);
+    int match=0;
+    char *queryField;
+    char *queryValue;
+    char *fieldValue;
+    char *pattern = "/(.*?)/";
+    match = regexMatch(pattern, query);
+    contentMatch = NULL;
+    if(match)
+    {
+        match = 0;
+        query = str_replace(query, "/", "");
+
+        queryField = getQueryField(query);
+        queryValue = getQueryValue(query);
+        fieldValue = find_getFieldValue(queryField, line);
+
+        match = regexMatch(queryValue, fieldValue);
+        if(match)
+        {
+            printf("The content is founded: %s\n", line);
+            //appendStringArray(line);
+        }
+        else
+        {
+            printf("The content not fouded by query: %s\n", query);
+        }
+    }
+    else
+    {
+        queryField = getQueryField(query);
+        queryValue = getQueryValue(query);
+        fieldValue = find_getFieldValue(queryField, line);
+        if(strcmp(queryValue, fieldValue) == 0)
+        {
+            printf("The content is founded: %s\n", line);
+            //appendStringArray(line);
+        }
+        else
+        {
+            printf("The content not fouded by query: %s\n", query);
+        }
+    }
+}
+
+char *getQueryField(char *query)
+{
+    char *queryField;
+    char *pattern;
+    pattern = "{\"(.*?)\":";
+    regexMatch(pattern, query);
+    queryField = contentMatch;
+    contentMatch = NULL;
+    return queryField;
+}
+
+char *getQueryValue(char *query)
+{
+   char *queryValue;
+   char *pattern;
+   pattern = ":\"(.*?)\"}";
+   regexMatch(pattern, query);
+   queryValue = contentMatch;
+   contentMatch = NULL;
+   return queryValue;
+}
+
+char *find_getFieldValue(char *field, char *stringJson)
+{
+    char *valueString;
+    cJSON *json;
+    json=cJSON_Parse(stringJson);
+    cJSON * value = cJSON_GetObjectItem(json, field);
+    valueString = (value) ? value->valuestring : "";
+    return valueString;
 }
 
 void find_readCollection(char *documentId, char* collection)
@@ -111,7 +227,7 @@ void find_readCollection(char *documentId, char* collection)
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
-    char * path = pathCollection__(collection);
+    char * path = pathCollectionDocument__(collection, NULL);
     fp = fopen(path, "r");
     if (fp == NULL)
     {
@@ -119,7 +235,8 @@ void find_readCollection(char *documentId, char* collection)
         return;
     }
 
-    while ((read = getline(&line, &len, fp)) != -1) {
+    while ((read = getline(&line, &len, fp)) != -1)
+    {
         find_documentsById(line, documentId);
     }
     fclose(fp);
@@ -140,10 +257,9 @@ void find_documentsById(char *lineContent_collection, char *documentId)
     if(match)
     {
         int exists = checkStringValueExistsArray(contentMatch);
-        //printf("exists: %i\n", exists);
         if(exists == 0)
         {
-            appendStringArray(contentMatch);
+            arrayDocuments = appendStringArray(contentMatch, &indexArrayDocuments);
             foundDocuments = 1;
         }
     }
@@ -203,7 +319,7 @@ int addInCollection__(char *path, char *value)
 
 void addInDocument__(char *documentName, const char *value)
 {
-    char *dir = pathCollection__(documentName);
+    char *dir = pathCollectionDocument__(documentName, NULL);
     register int len = strlen(dir);
     register int i;
     //remove \n from string

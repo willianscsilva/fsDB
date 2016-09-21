@@ -1,6 +1,6 @@
 #include "WebSocketServer.h"
 #include "JSONDataController.h"
-#include "CommandsController.h"
+#include "WsReturn.h"
 #include <locale.h>
 
 void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, noPollPtr * user_data)
@@ -17,9 +17,11 @@ void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, n
         /*printf ("Listener received (size: %d, ctx refs: %d): (first %d bytes, fragment: %d) '%s'\n",
                 nopoll_msg_get_payload_size (msg),
                 nopoll_ctx_ref_count (ctx), shown, nopoll_msg_is_fragment (msg), content_msg);*/
+
         // json to parse.
         wsJson = content_msg;
         jsonParse();
+        //printf("wsArrayReturn: %s\n", wsArrayReturn[0]);
         // reply to the message
         nopoll_conn_send_text (conn, "Successfully received message", 30);
         return;

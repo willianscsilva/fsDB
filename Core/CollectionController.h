@@ -4,7 +4,6 @@
  *
  * Created on 16 de Julho de 2016, 13:38
  */
-
 void write__(char *path, char *value, const char * type);
 char *pathCollection__(const char *collectionName);
 
@@ -25,6 +24,14 @@ void find_documentsById(char * lineContent_collection, char *documentId);
 void find_readList(char *query);
 
 void find_execQueryInDocument(char *documentName, char *query);
+
+void find_execQuery(char * line, char *query);
+
+char *getQueryField(char *query);
+
+char *getQueryValue(char *query);
+
+char *find_getFieldValue(char *field, char *stringJson);
 
 int addInCollection__(char *path, char *value);
 

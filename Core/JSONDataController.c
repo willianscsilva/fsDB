@@ -1,11 +1,12 @@
 #include "JSONDataController.h"
+#include "CommandsController.h"
 
 void jsonParse()
 {
     char *out;cJSON *json;
     json=cJSON_Parse(wsJson);
     if (!json) {
-        printf("Error before: [%s]\n",cJSON_GetErrorPtr());
+        printf("jsonParseError before: [%s]\n",cJSON_GetErrorPtr());
     }
     else
     {
