@@ -17,6 +17,8 @@ int addDocumentInCollection(char* collection, char *id, const char *documentValu
 
 char *find(char* collection, char *id, char *query);
 
+void nullingLocalVars();
+
 void find_readCollection(char *documentId, char* collection);
 
 void find_documentsById(char * lineContent_collection, char *documentId);

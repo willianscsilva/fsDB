@@ -22,6 +22,7 @@ void listener_on_message (noPollCtx * ctx, noPollConn * conn, noPollMsg * msg, n
         wsJson = content_msg;
         jsonParse();
         //printf("wsArrayReturn: %s\n", wsArrayReturn[0]);
+        //indexArrayFindContent = 0;
         // reply to the message
         nopoll_conn_send_text (conn, "Successfully received message", 30);
         return;

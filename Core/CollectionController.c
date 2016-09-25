@@ -9,8 +9,11 @@
 
 int foundDocuments;
 int indexArrayDocuments;
-char **arrayDocuments;
-char **wsArrayReturn;
+int indexArrayFindContent;
+
+char **arrayDocuments = NULL;
+char **arrayFindContent = NULL;
+char **wsArrayReturn = NULL;
 char *pathCollectionDocument__(const char *collectionName, char *documentName)
 {
     static char dir[50];
@@ -99,20 +102,34 @@ char *find(char* collection, char *id, char *query)
     char *documentIdMd5 = str2md5(id, strlen(id));
     find_readCollection(documentIdMd5, collection);
     (foundDocuments) ? find_readList(query) : NULL;
+    nullingLocalVars();
+    nullingStringArray();
+}
+
+void nullingLocalVars()
+{
+    arrayDocuments = NULL;
+    arrayFindContent = NULL;
+    indexArrayDocuments = 0;
+    indexArrayFindContent = 0;
 }
 
 void find_readList(char *query)
 {
-    int i=0;
-    while(i<=indexArrayDocuments)
+    nullingStringArray();
+    register int i = 0;
+    while(i <= indexArrayDocuments)
     {
         find_execQueryInDocument(arrayDocuments[i], query);
         i++;
     }
 
-    wsArrayReturn = arrayDocuments;
-    arrayDocuments = NULL;
-    nullingStringArray();
+    i = 0;
+    while(i <= indexArrayFindContent)
+    {
+        printf("\n\narrayFindContent[%d] => %s\n\n", i, arrayFindContent[i]);
+        i++;
+    }
 }
 
 void find_execQueryInDocument(char *documentName, char *query)
@@ -135,6 +152,7 @@ void find_execQueryInDocument(char *documentName, char *query)
     {
         find_execQuery(line, query);
     }
+
     fclose(fp);
     if (line)
     {
@@ -165,7 +183,7 @@ void find_execQuery(char * line, char *query)
         if(match)
         {
             printf("The content is founded: %s\n", line);
-            //appendStringArray(line);
+            arrayFindContent = appendStringArray(line, &indexArrayFindContent);
         }
         else
         {
@@ -180,7 +198,7 @@ void find_execQuery(char * line, char *query)
         if(strcmp(queryValue, fieldValue) == 0)
         {
             printf("The content is founded: %s\n", line);
-            //appendStringArray(line);
+            arrayFindContent = appendStringArray(line, &indexArrayFindContent);
         }
         else
         {
