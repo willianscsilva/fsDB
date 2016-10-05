@@ -1,1 +1,6 @@
-extern char **wsArrayReturn;
+typedef struct wsObjectReturn {
+    char **wsArrayReturn;
+    int indexArrayReturn;
+} wsObjectReturn;
+
+extern wsObjectReturn wsReturn;

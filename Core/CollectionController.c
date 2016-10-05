@@ -13,7 +13,10 @@ int indexArrayFindContent;
 
 char **arrayDocuments = NULL;
 char **arrayFindContent = NULL;
-char **wsArrayReturn = NULL;
+struct wsObjectReturn wsReturn;
+
+const char *findOperators[] = {">", "<", ">=", "<=", "="};
+
 char *pathCollectionDocument__(const char *collectionName, char *documentName)
 {
     static char dir[50];
@@ -123,13 +126,8 @@ void find_readList(char *query)
         find_execQueryInDocument(arrayDocuments[i], query);
         i++;
     }
-
-    i = 0;
-    while(i <= indexArrayFindContent)
-    {
-        printf("\n\narrayFindContent[%d] => %s\n\n", i, arrayFindContent[i]);
-        i++;
-    }
+    wsReturn.wsArrayReturn = arrayFindContent;
+    wsReturn.indexArrayReturn = indexArrayFindContent;
 }
 
 void find_execQueryInDocument(char *documentName, char *query)
@@ -184,6 +182,7 @@ void find_execQuery(char * line, char *query)
         {
             printf("The content is founded: %s\n", line);
             arrayFindContent = appendStringArray(line, &indexArrayFindContent);
+            contentMatch = NULL;
         }
         else
         {
@@ -194,6 +193,17 @@ void find_execQuery(char * line, char *query)
     {
         queryField = getQueryField(query);
         queryValue = getQueryValue(query);
+
+        printf("fieldValue: %s\n", queryField);
+        printf("queryValue: %s\n", queryValue);
+        int isNumber = checkQueryValueIsNumber(queryValue);
+        printf("isNumber: %d\n", isNumber);
+        if(isNumber)
+        {
+            getFindOperator(queryValue);
+        }
+        exit(0);
+
         fieldValue = find_getFieldValue(queryField, line);
         if(strcmp(queryValue, fieldValue) == 0)
         {
@@ -204,6 +214,26 @@ void find_execQuery(char * line, char *query)
         {
             printf("The content not fouded by query: %s\n", query);
         }
+    }
+}
+
+int checkQueryValueIsNumber(char * queryValue)
+{
+    int match = regexMatch("[0-9]+", queryValue);
+    contentMatch = NULL;
+    return match;
+}
+
+//implemets on function find() call, 'value':{'age': {'<=':'33'}}
+char *getFindOperator(char * queryValue)
+{
+    int totalOperators = COUNT(findOperators);
+    register int i = 0;
+    for(i; i<totalOperators; i++)
+    {
+        printf("findOperators[i] => %s\n", findOperators[i]);
+        //int match = regexMatch(findOperators[i], queryValue);
+        //contentMatch = NULL;
     }
 }
 
@@ -284,6 +314,7 @@ void find_documentsById(char *lineContent_collection, char *documentId)
     contentMatch = NULL;
 }
 
+/*put the contents of this function in a JSONDataController function*/
 char *buildCollecionContent(char *documentName, char *documentId)
 {
     cJSON *root,*id;

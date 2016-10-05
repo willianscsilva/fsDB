@@ -8,4 +8,7 @@
 #include "cJSON.h"
 
 char *wsJson;
+
 void jsonParse();
+
+char * buildReturnToClientSide(char **arrayReturn, int indexArray);

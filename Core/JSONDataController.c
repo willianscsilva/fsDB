@@ -10,11 +10,23 @@ void jsonParse()
     }
     else
     {
-        initCommandsController(json);
-        //out=cJSON_Print(json);//print a formatted json with the line breaks etc.
-        out=cJSON_PrintUnformatted(json);//print a json in a single line.
-        cJSON_Delete(json);
-        //printf("%s\n",out);
-        free(out);
+        initCommandsController(json);        
     }
+}
+
+char * buildReturnToClientSide(char **arrayReturn, int indexArray)
+{
+    cJSON *rootArray, *rootObj, *db, *dbArray, *rootArrayReturn;
+    char *out;
+    register int i;
+    rootArray=cJSON_CreateArray();
+    cJSON_AddItemToArray(rootArray, db = cJSON_CreateObject());
+    cJSON_AddItemToObject(db, "dbObject", dbArray = cJSON_CreateArray());
+    for(i=0; i<=indexArray; i++)
+    {
+        cJSON_AddItemToArray(dbArray, rootObj = cJSON_CreateObject());
+        cJSON_AddStringToObject(rootObj, "successReturn", arrayReturn[i]);
+        cJSON_AddStringToObject(rootObj, "failureReturn", "NULL");
+    }
+    return cJSON_PrintUnformatted(rootArray);
 }

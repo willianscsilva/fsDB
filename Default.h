@@ -7,3 +7,4 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define COUNT(x)  (int)(sizeof(x) / sizeof((x)[0]))

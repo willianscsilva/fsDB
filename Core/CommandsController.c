@@ -1,7 +1,7 @@
 #include "CommandsController.h"
 #include "CollectionController.h"
 
-const char *commandList[] = {"createCollection","addDocument", "find"};
+const char *commandList[] = {"createCollection", "addDocument", "find"};
 
 void initCommandsController(cJSON *json)
 {
@@ -82,7 +82,7 @@ int execInternalCommand(int commandCode, char* collection, char *id, char *value
         case FIND:
             if(isObjt == 1)
             {
-                find(collection, id, value);                
+                find(collection, id, value);
                 return 1;
             }
             else

@@ -29,6 +29,10 @@ void find_execQueryInDocument(char *documentName, char *query);
 
 void find_execQuery(char * line, char *query);
 
+int checkQueryValueIsNumber(char * queryValue);
+
+char *getFindOperator(char * queryValue);
+
 char *getQueryField(char *query);
 
 char *getQueryValue(char *query);

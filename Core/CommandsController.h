@@ -1,6 +1,6 @@
 #include "../Default.h"
 #include "cJSON.h"
-#define COUNT(x)  (int)(sizeof(x) / sizeof((x)[0]))
+//#define COUNT(x)  (int)(sizeof(x) / sizeof((x)[0]))
 #define CREATE_COLLECTION 0
 #define ADD_DOCUMENT_IN_COLLECTION 1
 #define FIND 2

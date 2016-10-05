@@ -14,7 +14,8 @@
 
                ws.onopen = function()
                {
-                  var data0 = {'command':'find', 'collection':'test', 'id':'formLogin', 'value':{'name':'/will/'}};
+                  var data0 = {'command':'find', 'collection':'test', 'id':'formLogin', 'value':{'age':'33'}};
+                  //var data0 = {'command':'find', 'collection':'test', 'id':'formLogin', 'value':{'name':'/will/'}};
                   //var data1 = {'command':'find', 'collection':'test', 'id':'formCad', 'value':{'name':'elaine'}};
                   //var data1 = {'command':'createCollection', 'value':'test'};
                   //var data0 = {'command':'addDocument', 'collection':'test', 'id':'formCad', 'value':{'name':'willçãoéá', 'age':33, 'sex': 'male', 'cellphone':'5511946090982', 'adddress':'avenida palmira, 622', 'city':'ribeirão pires', 'state':'são paulo'}};
@@ -23,7 +24,6 @@
                   //var data2 = {'command':'addDocument', 'collection':'test', 'id':'formCad', 'value':'ola mundo'};
                   var data = [data0];
                   var j = JSON.stringify(data);
-                  console.log(j);
                   // Web Socket is connected, send data using send()
                   //ws.send(document.documentElement.innerHTML);
                   ws.send(j);
@@ -32,8 +32,8 @@
 
                ws.onmessage = function (evt)
                {
-                  var received_msg = evt.data;
-                  alert("Message is received..." + received_msg);
+                  var received_msg = JSON.parse(evt.data);
+                  console.log(received_msg);
                };
 
                ws.onclose = function()
